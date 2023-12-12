@@ -1,0 +1,58 @@
+.code-tab-content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 100px 30px;
+    
+  }
+  
+  .big-logo {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 70px;
+  }
+
+  .text {
+    font-size: 24px;
+    margin-bottom: 30px;
+  }
+  
+  .button-container {
+    width: 100%;
+  }
+  
+  .purple-button {
+    background-color: #444AD4;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    margin-right: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  
+  .camera-icon {
+    height: 30px;
+    margin-right: 5px;
+  }
+  
+  .outline-purple-button {
+    background-color: transparent;
+    color: #444AD4;
+    border: 1px solid #444AD4;
+    padding: 12.5px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 20px;
+    font-weight: bold;
+  }
+  
