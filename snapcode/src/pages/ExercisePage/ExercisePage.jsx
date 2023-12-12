@@ -27,7 +27,7 @@ const ExercisePage = () => {
 
   return (
     <div>
-      <TopNavbar />
+      <TopNavbar title="Exercise 1: Heading Tags"/>
       <Tabs activeTab={activeTab} onTabChange={handleTabChange} />
       <div className="content-container">
         {renderContent()}
