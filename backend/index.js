@@ -30,30 +30,6 @@ app.get("/hello", (req, res) => {
   res.send("Hello World!");
 });
 
-const main = async () => {
-  try {
-    const buf = await fs.readFile("./handwritten-html.jpg");
-    console.log(buf);
-    const res = await textract
-      .detectDocumentText({ Document: { Bytes: buf } })
-      .promise();
-    // console.log(res);
-
-    text = "";
-
-    for (const item of res.Blocks) {
-      if (item.BlockType === "LINE") {
-        console.log(item.Text);
-        text += " " + item.Text;
-      }
-    }
-
-    console.log("Concatenated Text:", text);
-  } catch (err) {
-    console.log(err);
-  }
-};
-
 // OCR processing logic
 const processOCR = async (buffer) => {
   console.log(buffer);
@@ -80,7 +56,52 @@ app.post("/outputocr", upload.single("image"), async (req, res) => {
       return res.status(400).send("No file uploaded");
     }
 
-    const textOutput = await processOCR(req.file.buffer);
+    // const textOutput = await processOCR(req.file.buffer);
+    // let textOutput = [
+    //   "<!",
+    //   "DOCTYPE html>",
+    //   "<HTML>",
+    //   "<HEAD>",
+    //   '<meta characte = " wtf - 8"> "',
+    //   "<title> Hello World By Rajesh.M </title>",
+    //   "</HEAD>",
+    //   "<BODY>",
+    //   "<hi>Hello World By Rajesh. M </his",
+    //   "<p>",
+    //   "This code was written by me.",
+    //   "How awesome is that?",
+    //   "</p>",
+    //   "</BODY>",
+    //   "</HTHL>",
+    // ];
+    // textOutput = [
+    //   "<title> Hello World By Rajesh.M </title>",
+    //   "</HEAD>",
+    //   "<BODY>",
+    //   "<hi>Hello World By Rajesh. M </his",
+    //   "<p>",
+    //   "This code was written by me.",
+    //   "How awesome is that?",
+    //   "</p>",
+    //   "</BODY>",
+    //   "</HTHL>",
+    // ];
+    let textOutput = [
+      "<html>",
+      "<p> this is a paragraph </p>",
+      "<hl> I didn't close this tag",
+      "<h2> I closed this </ha>",
+      "</htmle",
+    ];
+
+    textOutput = [
+      "<html>",
+      "<p> this is a paragraph </p>",
+      "<hl> I didn't close this tag",
+      "<h2> I closed this </h2>",
+      "</html>",
+    ];
+
     res.json(textOutput);
   } catch (err) {
     console.error(err);

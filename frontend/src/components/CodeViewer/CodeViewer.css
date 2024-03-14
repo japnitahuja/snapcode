@@ -1,6 +1,7 @@
 /* CodeViewer.css */
 .code-viewer {
     font-family: monospace;
+    font-size: 1rem;
   }
   
   .code-line {
@@ -28,10 +29,160 @@
   }
   
   .error {
-    
+    background-color: #ffcccc;
   }
   
   .clicked {
-    background-color: #ffcccc;
+    
   }
+
+  /* Add these styles to your CSS file */
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup {
+  background-color: #fff;
+  width: 90%;
+  box-sizing: border-box;
+  /* max-width: 400px; Adjust the maximum width as needed */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.popup-header {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.close-btn {
+  cursor: pointer;
+  font-size: 24px;
+  color: #333;
+}
+
+.popup-body {
+  margin-top: 10px;
+}
+
+input {
+  box-sizing: border-box;
+  width: 90%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.valid {
+  border-color: #4caf50; /* Green border for a valid input */
+}
+
+.check-mark {
+  color: #4caf50; /* Green color for the check mark */
+  margin-left: 5px;
+}
+
+.submit-btn {
+  background-color: #ccc;
+  color: #fff;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.submit-btn.active {
+  background-color: #9c27b0; /* Purple background for the active (enabled) button */
+}
+
+.menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.menu-codeline {
+  font-size: 1.25rem;
+}
+
+.menu-popup {
+  width: 100%;
+  background: #fff;
+  padding: 1rem;
+  border-radius: 8px 8px 0 0; /* Rounded corners only at the top */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.menu-popup-header {
+  text-align: right;
+}
+
+.menu-close-btn {
+  cursor: pointer;
+  font-size: 2rem;
+  color: #888;
+}
+
+.menu-popup-body {
+  margin: 1rem 0 2rem 0;
+}
+
+.menu-row {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 0;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  font-size: 1.1rem;
+}
+
+.menu-row:hover {
+  background-color: #f5f5f5; /* Light grey background on hover */
+}
+
+.menu-icon {
+  margin-right: 10px;
+  font-size: 20px;
+  color: #333; /* Black icon color */
+}
+
+.menu-text {
+  color: #333; /* Black text color */
+}
+
+.menu-grey-line {
+  height: 0.5px;
+  background-color: #ccc; /* Faint grey line */
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.error-row {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  padding-bottom: 2rem;
+  font-size: 1.25rem;
+}
+
   

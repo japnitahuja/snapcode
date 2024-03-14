@@ -68,22 +68,20 @@ const CodeTabContent = () => {
     <div className="code-tab-content">
       <img src={logo} alt="Big Logo" className="big-logo" />
       <p className="text">Ready to start?</p>
-      <div className="button-container">
-        <button className="purple-button" onClick={handleCaptureButtonClick}>
-          <img src={cameraIcon} alt="Camera" className="camera-icon" />
-        </button>
-        <input
-          type="file"
-          id="upload-input"
-          accept="image/*"
-          style={{ display: "none" }}
-          onChange={handleFileChange}
-        />
-        <button className="outline-purple-button" onClick={handleUpload}>
-          Upload Image
-        </button>
-      </div>
 
+      <button className="purple-button" onClick={handleCaptureButtonClick}>
+        <img src={cameraIcon} alt="Camera" className="camera-icon" />
+      </button>
+      <input
+        type="file"
+        id="upload-input"
+        accept="image/*"
+        style={{ display: "none" }}
+        onChange={handleFileChange}
+      />
+      <button className="outline-purple-button" onClick={handleUpload}>
+        Upload Image
+      </button>
       {imageSrc && (
         <div>
           <p>Selected Image:</p>

@@ -1,10 +1,13 @@
 .navbar {
+    box-sizing: border-box;
+    width: 100vw;
     background-color: #444AD4;
     color: #fff;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 20px;
+    
   }
   
   .left-content {

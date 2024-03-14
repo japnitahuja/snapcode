@@ -1,16 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import "./ComfirmImage.css"; // Import your stylesheet for additional styling
 import { useLocation, useNavigate } from "react-router-dom";
 
 const ComfirmImage = () => {
   const { state } = useLocation();
   const { imageData, imageBuffer, file } = state;
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   console.log(imageBuffer);
   console.log(imageData);
   console.log(file);
 
   const getOCROutput = async () => {
+    setIsLoading(true);
     // Convert the image file to a FormData object
     const formData = new FormData();
     formData.append("image", file);
@@ -38,6 +40,7 @@ const ComfirmImage = () => {
       <img src={imageData} alt="Your Image" className="main-image" />
 
       <div className="button-container">
+        {isLoading ? "fetching ocr output" : ""}
         <p className="question-text">Satisfied with the photo?</p>
         <div className="button-wrapper">
           <button className="accept-button" onClick={getOCROutput}>
