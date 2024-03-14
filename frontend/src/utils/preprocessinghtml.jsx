@@ -1,4 +1,4 @@
-export const ocrOutputToHTML = (text) => {
+export const stringToHTML = (text) => {
   console.log(text);
   text = text.replace(/ +/g, " "); // Convert multiple spaces to single space
 
@@ -99,7 +99,11 @@ export const validateClosingTags = (HTMLCode) => {
   for (const [line, contentType] of HTMLCode) {
     if (!line || line.trim() === "") {
       continue;
-    } else if (line.startsWith("<") && line.endsWith(">")) {
+    } else if (
+      line.startsWith("<") &&
+      line.endsWith(">") &&
+      contentType == "valid tag"
+    ) {
       const tagName = getTagName(line);
       if (tagName !== "") {
         if (line.startsWith("</")) {
@@ -146,7 +150,7 @@ export const validateClosingTags = (HTMLCode) => {
         result.push([line, "invalid tag"]);
       }
     } else {
-      result.push([line, contentType]); // Not a valid HTML tag, add as is
+      result.push([line, contentType]); // Not a valid HTML tag and text add as is
     }
   }
 

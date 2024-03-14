@@ -15,7 +15,13 @@ const MainDashboard = () => {
   );
   const [topNavbarBackLink, setTopNavbarBackLink] = useState("");
 
-  let ocrOutput = null;
+  let ocrOutput = [
+    "<html>",
+    "<p> this is a paragraph </p>",
+    "<hl> I didn't close this tag",
+    "<h2> I closed this </ha>",
+    "</htmle",
+  ];
   const { state } = useLocation();
   console.log(state);
   if (state?.ocrOutput) {
@@ -31,7 +37,13 @@ const MainDashboard = () => {
         if (!ocrOutput) {
           return <CodeTabContent />;
         } else {
-          return <CodeViewer ocrOutput={ocrOutput} setShowTabs={setShowTabs} />;
+          return (
+            <CodeViewer
+              ocrOutput={ocrOutput}
+              setShowTabs={setShowTabs}
+              setTopNavbarTitle={setTopNavbarTitle}
+            />
+          );
         }
       case "website":
         if (htmlCode !== false) {

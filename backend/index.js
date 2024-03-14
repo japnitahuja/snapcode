@@ -15,9 +15,9 @@ app.use(
 );
 
 aws.config.update({
-  region: process.env.AWS_REGION,
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  region: process?.env.AWS_REGION,
+  accessKeyId: process?.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process?.env.AWS_SECRET_ACCESS_KEY,
 });
 
 const textract = new aws.Textract();
@@ -94,13 +94,13 @@ app.post("/outputocr", upload.single("image"), async (req, res) => {
       "</htmle",
     ];
 
-    textOutput = [
-      "<html>",
-      "<p> this is a paragraph </p>",
-      "<hl> I didn't close this tag",
-      "<h2> I closed this </h2>",
-      "</html>",
-    ];
+    // textOutput = [
+    //   "<html>",
+    //   "<p> this is a paragraph </p>",
+    //   "<hl> I didn't close this tag",
+    //   "<h2> I closed this </h2>",
+    //   "</html>",
+    // ];
 
     res.json(textOutput);
   } catch (err) {

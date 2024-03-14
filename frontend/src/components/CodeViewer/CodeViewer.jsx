@@ -2,41 +2,52 @@ import React, { useState, useEffect } from "react";
 import "./CodeViewer.css"; // Import a CSS file for styling (create your own or modify as needed)
 import {
   isValidTag,
-  ocrOutputToHTML,
+  stringToHTML,
   validateClosingTags,
 } from "../../utils/preprocessinghtml.jsx";
 import editIcon from "../../assets/grey-edit.png";
 import deleteIcon from "../../assets/red-delete.png";
 import redErrorIcon from "../../assets/red-error.png";
 
-const CodeViewer = ({ ocrOutput, setShowTabs }) => {
+const CodeViewer = ({ ocrOutput, setShowTabs, setTopNavbarTitle }) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [userCode, setUserCode] = useState(ocrOutput);
+  const [userCodeString, setUserCodeString] = useState(ocrOutput.join(""));
   const [processedHTML, setProcessedHTML] = useState([]);
   const [numberOfInvalidTags, setNumberOfInvalidTags] = useState(-1);
   const [errorCorrectionStage, setErrorCorrectionStage] =
     useState("Invalid Tags");
-  const [invalidTagsPopupOpen, setInvalidTagsPopupOpen] = useState(false);
-  const [selectedLineNumber, setSelectedLineNumber] = useState(null);
+  const [selectedLineIndex, setSelectedLineIndex] = useState(null);
+  const [inputPopupOpen, setInputPopupOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
-  const [isInputValid, setIsInputValid] = useState(false);
+  const [isInputValid, setIsInputValid] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [isEditingCodeLine, setIsEditingCodeLine] = useState(true);
+  const [purposeOfPopUp, setPurposeOfPopUp] = useState(false);
 
-  useEffect(() => {
-    console.log("Input", userCode.join(""));
-    let processedHTMLOutput = ocrOutputToHTML(userCode.join(""));
+  const stringToHtmlValidation = (userCode) => {
+    let processedHTMLOutput = validateClosingTags(stringToHTML(userCode));
     let countInvalidTags = 0;
     processedHTMLOutput.forEach((line) => {
       if (line[1] == "invalid tag") {
         countInvalidTags += 1;
       }
     });
-    console.log(countInvalidTags);
+    return {
+      processedHTMLOutput,
+      countInvalidTags,
+    };
+  };
+
+  useEffect(() => {
+    console.log("user Code String", userCodeString);
+    let { processedHTMLOutput, countInvalidTags } =
+      stringToHtmlValidation(userCodeString);
+
+    console.log("Invalid tags", countInvalidTags);
     setNumberOfInvalidTags(countInvalidTags);
+    console.log("setting processed html to:", processedHTMLOutput);
     setProcessedHTML(processedHTMLOutput);
     setIsLoading(false);
-  }, [ocrOutput]);
+  }, [userCodeString]);
 
   useEffect(() => {
     console.log("Number of invalid tags changed to: ", numberOfInvalidTags);
@@ -49,79 +60,98 @@ const CodeViewer = ({ ocrOutput, setShowTabs }) => {
     }
   }, [numberOfInvalidTags]);
 
-  useEffect(() => {
-    setShowTabs(false);
-  }, [isEditingCodeLine]);
-
   const handleInputChange = (e) => {
     const newInputValue = e.target.value;
     setInputValue(newInputValue);
-    setIsInputValid(isValidTag(newInputValue));
   };
 
   const handleSubmit = () => {
-    const updatedProcessedHTML = [...processedHTML];
-    updatedProcessedHTML[selectedLineNumber][0] = inputValue;
-    updatedProcessedHTML[selectedLineNumber][1] = "valid tag";
-    setProcessedHTML(updatedProcessedHTML);
-    setNumberOfInvalidTags((prevcount) => prevcount - 1);
+    console.log(purposeOfPopUp);
+    let updatedProcessedHTML = [...processedHTML];
+    if (purposeOfPopUp == "Editing") {
+      updatedProcessedHTML[selectedLineIndex][0] = inputValue;
+    } else if (purposeOfPopUp == "Adding") {
+      updatedProcessedHTML.splice(
+        selectedLineIndex + 1,
+        0,
+        ...[[inputValue, "new text"]]
+      );
+      console.log(updatedProcessedHTML);
+    } else if (purposeOfPopUp == "Deleting") {
+      updatedProcessedHTML.splice(selectedLineIndex, 1, ...[]);
+      console.log(updatedProcessedHTML);
+    } else {
+      console.log("Invalid purpose of pop up:", purposeOfPopUp);
+      return;
+    }
+
+    let updatedUserCodeString = "";
+    updatedProcessedHTML.forEach((line, index) => {
+      updatedUserCodeString += line[0];
+    });
+    setUserCodeString(updatedUserCodeString);
     closePopup();
   };
 
   const handleClick = (lineNumber) => {
-    const tagType = processedHTML[lineNumber][1];
-    if (tagType === "invalid tag") {
-      setSelectedLineNumber(lineNumber);
-      setInputValue(processedHTML[lineNumber][0]);
-      setIsInputValid(isValidTag(processedHTML[lineNumber][0]));
-      setInvalidTagsPopupOpen(true);
-    } else {
-      setSelectedLineNumber(lineNumber);
-      setMenuOpen(true);
+    setSelectedLineIndex(lineNumber);
+    setMenuOpen(true);
+  };
+
+  const openPopup = (purpose) => {
+    if (selectedLineIndex !== null) {
+      setSelectedLineIndex(selectedLineIndex);
+      setIsInputValid(isValidTag(processedHTML[selectedLineIndex][0]));
+      setPurposeOfPopUp(purpose);
+      if (purpose == "Editing") {
+        setInputValue(processedHTML[selectedLineIndex][0]);
+      }
+      setInputPopupOpen(true);
     }
   };
 
   const closePopup = () => {
-    setInvalidTagsPopupOpen(false);
-    setSelectedLineNumber(null);
+    setInputPopupOpen(false);
+    setSelectedLineIndex(null);
+    setIsInputValid(false);
+    setInputValue("");
+    setPurposeOfPopUp(false);
   };
 
-  const closeMenuPopup = () => {
+  const closeMenu = () => {
     setMenuOpen(false);
-    setSelectedLineNumber(null);
+    setSelectedLineIndex(null);
   };
 
   const handleDeleteLine = () => {
-    // Implement logic to delete the selected line
-    // Update the state accordingly
+    closeMenu();
+    openPopup("Deleting");
   };
 
   const handleAddLine = () => {
-    // Implement logic to add a line after the selected line
-    // Update the state accordingly
+    console.log("add line");
+    closeMenu();
+    openPopup("Adding");
   };
 
   const handleEditLine = () => {
-    // Implement logic to add a line after the selected line
-    // Update the state accordingly
+    console.log("edit line");
+    closeMenu();
+    openPopup("Editing");
   };
 
   if (isLoading) {
     return <div>Loading</div>;
   }
 
-  if (isEditingCodeLine) {
-    return <div className="overlay">Editing code line</div>;
-  }
-
   return (
     <div className="code-viewer">
-      <h1>{errorCorrectionStage}</h1>
+      {/* <h1>{errorCorrectionStage}</h1> */}
       {processedHTML.map((line, index) => (
         <div
           key={index}
           className={`code-line ${index % 2 === 0 ? "even" : "odd"} ${
-            selectedLineNumber == index ? "error" : ""
+            selectedLineIndex == index ? "error" : ""
           } `}
           onClick={() => handleClick(index)}
         >
@@ -138,7 +168,7 @@ const CodeViewer = ({ ocrOutput, setShowTabs }) => {
         </div>
       ))}
 
-      {invalidTagsPopupOpen && selectedLineNumber !== null && (
+      {inputPopupOpen && selectedLineIndex !== null && (
         <div className="overlay">
           <div className="popup">
             <div className="popup-header">
@@ -147,62 +177,66 @@ const CodeViewer = ({ ocrOutput, setShowTabs }) => {
               </span>
             </div>
             <div className="popup-body">
+              <h3>{purposeOfPopUp}</h3>
               <p>
-                Line {selectedLineNumber + 1}:{" "}
-                {processedHTML[selectedLineNumber][0]}
+                Line {selectedLineIndex + 1}:{" "}
+                {processedHTML[selectedLineIndex][0]}
               </p>
-              <input
-                type="text"
-                value={inputValue}
-                onChange={handleInputChange}
-                className={isInputValid ? "valid" : ""}
-              />
-              {isInputValid && <span className="check-mark">&#10003;</span>}
-              <button
-                onClick={handleSubmit}
-                disabled={!isInputValid}
-                className={isInputValid ? "submit-btn active" : "submit-btn"}
-              >
-                Submit
+              {purposeOfPopUp != "Deleting" ? (
+                <input
+                  type="text"
+                  value={inputValue}
+                  onChange={handleInputChange}
+                  className={isInputValid ? "valid" : ""}
+                />
+              ) : null}
+
+              <button onClick={handleSubmit} className="submit-btn">
+                {purposeOfPopUp == "Deleting" ? "Delete" : "Submit"}
               </button>
+              {purposeOfPopUp == "Deleting" ? (
+                <button onClick={closePopup} className="submit-btn-border">
+                  Cancel
+                </button>
+              ) : null}
             </div>
           </div>
         </div>
       )}
 
-      {menuOpen && selectedLineNumber !== null && (
+      {menuOpen && selectedLineIndex !== null && (
         <div className="menu-overlay">
           <div className="menu-popup">
             <div className="menu-popup-header">
-              <span onClick={closeMenuPopup} className="menu-close-btn">
+              <span onClick={closeMenu} className="menu-close-btn">
                 &times;
               </span>
             </div>
             <div className="menu-popup-body">
               <p className="menu-codeline">
-                Line {selectedLineNumber + 1}:{" "}
-                {processedHTML[selectedLineNumber][0]}
+                Line {selectedLineIndex + 1}:{" "}
+                {processedHTML[selectedLineIndex][0]}
               </p>
-              {processedHTML[selectedLineNumber][1] === "invalid tag" ||
-              processedHTML[selectedLineNumber][1] === "unclosed open tag" ||
-              processedHTML[selectedLineNumber][1] === "extra closing tag" ? (
+              {processedHTML[selectedLineIndex][1] === "invalid tag" ||
+              processedHTML[selectedLineIndex][1] === "unclosed open tag" ||
+              processedHTML[selectedLineIndex][1] === "extra closing tag" ? (
                 <div className="error-row">
                   <img className="menu-icon" src={redErrorIcon} />
-                  <div className="menu-text">{`Error ${processedHTML[selectedLineNumber][1]}`}</div>
+                  <div className="menu-text">{`Error ${processedHTML[selectedLineIndex][1]}`}</div>
                 </div>
               ) : null}
 
-              <div className="menu-row">
+              <div className="menu-row" onClick={handleEditLine}>
                 <img className="menu-icon" src={editIcon} />
                 <div className="menu-text">Edit Code Line</div>
               </div>
               <div className="menu-grey-line"></div>
-              <div className="menu-row">
+              <div className="menu-row" onClick={handleAddLine}>
                 <img className="menu-icon" src={editIcon} />
                 <div className="menu-text">Add Line After</div>
               </div>
               <div className="menu-grey-line"></div>
-              <div className="menu-row">
+              <div className="menu-row" onClick={handleDeleteLine}>
                 <img className="menu-icon" src={deleteIcon} />
                 <div className="menu-text">Delete Line</div>
               </div>
