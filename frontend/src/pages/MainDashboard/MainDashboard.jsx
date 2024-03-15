@@ -23,14 +23,14 @@ const MainDashboard = () => {
     "<h2> I closed this </ha>",
     "</htmle",
   ];
-  // ocrOutput = [
-  //   // "<html>",
-  //   "<p> this is a paragraph </p>",
-  //   "<h3>",
-  //   "I didnt close",
-  //   "<h2> I closed this </h2>",
-  //   // "</html>",
-  // ];
+  ocrOutput = [
+    "<html>",
+    "<p> this is a paragraph </p>",
+    "<h3>",
+    "I didnt close",
+    "<h2> I closed this </h2>",
+    "</html>",
+  ];
   const { state } = useLocation();
   console.log(state);
   if (state?.ocrOutput) {

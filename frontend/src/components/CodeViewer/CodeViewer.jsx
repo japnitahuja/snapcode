@@ -41,6 +41,7 @@ const CodeViewer = ({
         if (line[0] !== "<html>") {
           console.log("html tag missing");
           setHtmlTagError(true);
+          countErrors += 1;
         } else {
           console.log("html tag present");
           setHtmlTagError(false);
@@ -72,7 +73,10 @@ const CodeViewer = ({
     console.log("Number of invalid tags changed to: ", numberOfErrors);
     if (numberOfErrors == 0) {
       //removing the enclosing html tags then set the html code
-      setHTMLCode(userCodeString);
+      let htmlString = userCodeString;
+      htmlString = htmlString.replace(/^<html>/i, "");
+      htmlString = htmlString.replace(/<\/html>$/i, "");
+      setHTMLCode(htmlString);
     } else {
       setHTMLCode(false);
     }

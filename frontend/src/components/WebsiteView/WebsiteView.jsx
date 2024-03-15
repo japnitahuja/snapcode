@@ -16,7 +16,7 @@ const WebsiteView = ({ HTMLCode }) => {
   }
   console.log(DOMPurify.sanitize(HTMLCode, { USE_PROFILES: { html: true } }));
   return (
-    <div>
+    <div style={{ padding: "1rem" }}>
       {parse(DOMPurify.sanitize(HTMLCode, { USE_PROFILES: { html: true } }))}
     </div>
   );
