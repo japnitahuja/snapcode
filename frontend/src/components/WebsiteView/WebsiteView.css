@@ -1,0 +1,7 @@
+.error-row {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-size: 1.25rem;
+  }

@@ -1,71 +1,111 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./CodeViewer.css"; // Import a CSS file for styling (create your own or modify as needed)
 import {
+  htmlParser,
   isValidTag,
   stringToHTML,
-  validateClosingTags,
+  validateHTML,
 } from "../../utils/preprocessinghtml.jsx";
 import editIcon from "../../assets/grey-edit.png";
 import deleteIcon from "../../assets/red-delete.png";
 import redErrorIcon from "../../assets/red-error.png";
+import greyPlus from "../../assets/plus2.png";
 
-const CodeViewer = ({ ocrOutput, setShowTabs, setTopNavbarTitle }) => {
+const CodeViewer = ({
+  ocrOutput,
+  setShowTabs,
+  setTopNavbarTitle,
+  setHTMLCode,
+}) => {
   const [isLoading, setIsLoading] = useState(true);
+
   const [userCodeString, setUserCodeString] = useState(ocrOutput.join(""));
   const [processedHTML, setProcessedHTML] = useState([]);
-  const [numberOfInvalidTags, setNumberOfInvalidTags] = useState(-1);
-  const [errorCorrectionStage, setErrorCorrectionStage] =
-    useState("Invalid Tags");
+  const [numberOfErrors, setNumberOfErrors] = useState(-1);
+  const [htmlTagError, setHtmlTagError] = useState(false);
+
   const [selectedLineIndex, setSelectedLineIndex] = useState(null);
+
   const [inputPopupOpen, setInputPopupOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
-  const [isInputValid, setIsInputValid] = useState(true);
-  const [menuOpen, setMenuOpen] = useState(false);
   const [purposeOfPopUp, setPurposeOfPopUp] = useState(false);
 
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef(null);
+
   const stringToHtmlValidation = (userCode) => {
-    let processedHTMLOutput = validateClosingTags(stringToHTML(userCode));
-    let countInvalidTags = 0;
-    processedHTMLOutput.forEach((line) => {
-      if (line[1] == "invalid tag") {
-        countInvalidTags += 1;
+    let processedHTMLOutput = validateHTML(stringToHTML(userCode));
+    let countErrors = 0;
+    processedHTMLOutput.forEach((line, index) => {
+      if (index == 0) {
+        if (line[0] !== "<html>") {
+          console.log("html tag missing");
+          setHtmlTagError(true);
+        } else {
+          console.log("html tag present");
+          setHtmlTagError(false);
+        }
+      }
+
+      if (lineHasError(line)) {
+        countErrors += 1;
       }
     });
     return {
       processedHTMLOutput,
-      countInvalidTags,
+      countErrors,
     };
   };
 
   useEffect(() => {
     console.log("user Code String", userCodeString);
-    let { processedHTMLOutput, countInvalidTags } =
+    let { processedHTMLOutput, countErrors } =
       stringToHtmlValidation(userCodeString);
 
-    console.log("Invalid tags", countInvalidTags);
-    setNumberOfInvalidTags(countInvalidTags);
+    setNumberOfErrors(countErrors);
     console.log("setting processed html to:", processedHTMLOutput);
     setProcessedHTML(processedHTMLOutput);
     setIsLoading(false);
   }, [userCodeString]);
 
   useEffect(() => {
-    console.log("Number of invalid tags changed to: ", numberOfInvalidTags);
-    if (numberOfInvalidTags == 0) {
-      setErrorCorrectionStage("Closing Tags");
-      console.log(processedHTML);
-      console.log(validateClosingTags(processedHTML));
-
-      setProcessedHTML(validateClosingTags(processedHTML));
+    console.log("Number of invalid tags changed to: ", numberOfErrors);
+    if (numberOfErrors == 0) {
+      //removing the enclosing html tags then set the html code
+      setHTMLCode(userCodeString);
+    } else {
+      setHTMLCode(false);
     }
-  }, [numberOfInvalidTags]);
+  }, [numberOfErrors]);
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
+  const handleLineClick = (lineNumber) => {
+    setSelectedLineIndex(lineNumber);
+    openMenu();
+  };
+
+  const openMenu = () => {
+    setMenuOpen(true);
+  };
+
+  const closeMenu = () => {
+    setMenuOpen(false);
+    setSelectedLineIndex(null);
+    scrollToTop();
+  };
 
   const handleInputChange = (e) => {
     const newInputValue = e.target.value;
     setInputValue(newInputValue);
   };
 
-  const handleSubmit = () => {
+  const handleInputSubmit = () => {
     console.log(purposeOfPopUp);
     let updatedProcessedHTML = [...processedHTML];
     if (purposeOfPopUp == "Editing") {
@@ -90,18 +130,12 @@ const CodeViewer = ({ ocrOutput, setShowTabs, setTopNavbarTitle }) => {
       updatedUserCodeString += line[0];
     });
     setUserCodeString(updatedUserCodeString);
-    closePopup();
+    closeInputPopup();
   };
 
-  const handleClick = (lineNumber) => {
-    setSelectedLineIndex(lineNumber);
-    setMenuOpen(true);
-  };
-
-  const openPopup = (purpose) => {
+  const openInputPopup = (purpose) => {
     if (selectedLineIndex !== null) {
       setSelectedLineIndex(selectedLineIndex);
-      setIsInputValid(isValidTag(processedHTML[selectedLineIndex][0]));
       setPurposeOfPopUp(purpose);
       if (purpose == "Editing") {
         setInputValue(processedHTML[selectedLineIndex][0]);
@@ -110,34 +144,35 @@ const CodeViewer = ({ ocrOutput, setShowTabs, setTopNavbarTitle }) => {
     }
   };
 
-  const closePopup = () => {
+  const closeInputPopup = () => {
     setInputPopupOpen(false);
     setSelectedLineIndex(null);
-    setIsInputValid(false);
     setInputValue("");
     setPurposeOfPopUp(false);
-  };
-
-  const closeMenu = () => {
-    setMenuOpen(false);
-    setSelectedLineIndex(null);
+    scrollToTop();
   };
 
   const handleDeleteLine = () => {
     closeMenu();
-    openPopup("Deleting");
+    openInputPopup("Deleting");
   };
 
   const handleAddLine = () => {
-    console.log("add line");
     closeMenu();
-    openPopup("Adding");
+    openInputPopup("Adding");
   };
 
   const handleEditLine = () => {
-    console.log("edit line");
     closeMenu();
-    openPopup("Editing");
+    openInputPopup("Editing");
+  };
+
+  const lineHasError = (line) => {
+    return (
+      line[1] === "invalid tag" ||
+      line[1] === "unclosed open tag" ||
+      line[1] === "extra closing tag"
+    );
   };
 
   if (isLoading) {
@@ -146,19 +181,27 @@ const CodeViewer = ({ ocrOutput, setShowTabs, setTopNavbarTitle }) => {
 
   return (
     <div className="code-viewer">
-      {/* <h1>{errorCorrectionStage}</h1> */}
+      {htmlTagError ? (
+        <div className="error-row" style={{ padding: "5px", fontSize: "1rem" }}>
+          <img className="menu-icon" src={redErrorIcon} />
+          <div className="menu-text">{`Entire code should be enclosed in html tags`}</div>
+        </div>
+      ) : null}
+
       {processedHTML.map((line, index) => (
         <div
           key={index}
           className={`code-line ${index % 2 === 0 ? "even" : "odd"} ${
-            selectedLineIndex == index ? "error" : ""
+            selectedLineIndex == index
+              ? lineHasError(line)
+                ? "red-colour-row"
+                : "blue-colour-row"
+              : ""
           } `}
-          onClick={() => handleClick(index)}
+          onClick={() => handleLineClick(index)}
         >
           <span className="line-number">
-            {line[1] === "invalid tag" ||
-            line[1] === "unclosed open tag" ||
-            line[1] === "extra closing tag" ? (
+            {lineHasError(line) ? (
               <img src={redErrorIcon} style={{ width: "16px" }} />
             ) : (
               index + 1
@@ -167,35 +210,44 @@ const CodeViewer = ({ ocrOutput, setShowTabs, setTopNavbarTitle }) => {
           <span className="code">{line[0]}</span>
         </div>
       ))}
-
       {inputPopupOpen && selectedLineIndex !== null && (
         <div className="overlay">
           <div className="popup">
             <div className="popup-header">
-              <span onClick={closePopup} className="close-btn">
+              <h3>
+                {purposeOfPopUp == "Adding"
+                  ? `Adding After Line ${selectedLineIndex + 1}`
+                  : `${purposeOfPopUp} Line ${selectedLineIndex + 1}`}
+              </h3>
+              <span onClick={closeInputPopup} className="close-btn">
                 &times;
               </span>
             </div>
             <div className="popup-body">
-              <h3>{purposeOfPopUp}</h3>
               <p>
                 Line {selectedLineIndex + 1}:{" "}
-                {processedHTML[selectedLineIndex][0]}
+                {purposeOfPopUp == "Adding" || purposeOfPopUp == "Deleting"
+                  ? processedHTML[selectedLineIndex][0]
+                  : inputValue}
+              </p>
+              <p>
+                {purposeOfPopUp == "Adding"
+                  ? `Line ${selectedLineIndex + 2}: ${inputValue}`
+                  : null}
               </p>
               {purposeOfPopUp != "Deleting" ? (
                 <input
                   type="text"
                   value={inputValue}
                   onChange={handleInputChange}
-                  className={isInputValid ? "valid" : ""}
                 />
               ) : null}
 
-              <button onClick={handleSubmit} className="submit-btn">
+              <button onClick={handleInputSubmit} className="submit-btn">
                 {purposeOfPopUp == "Deleting" ? "Delete" : "Submit"}
               </button>
               {purposeOfPopUp == "Deleting" ? (
-                <button onClick={closePopup} className="submit-btn-border">
+                <button onClick={closeInputPopup} className="submit-btn-border">
                   Cancel
                 </button>
               ) : null}
@@ -203,28 +255,26 @@ const CodeViewer = ({ ocrOutput, setShowTabs, setTopNavbarTitle }) => {
           </div>
         </div>
       )}
-
       {menuOpen && selectedLineIndex !== null && (
         <div className="menu-overlay">
-          <div className="menu-popup">
+          <div ref={menuRef} className="menu-popup">
             <div className="menu-popup-header">
               <span onClick={closeMenu} className="menu-close-btn">
                 &times;
               </span>
             </div>
             <div className="menu-popup-body">
-              <p className="menu-codeline">
-                Line {selectedLineIndex + 1}:{" "}
-                {processedHTML[selectedLineIndex][0]}
-              </p>
-              {processedHTML[selectedLineIndex][1] === "invalid tag" ||
-              processedHTML[selectedLineIndex][1] === "unclosed open tag" ||
-              processedHTML[selectedLineIndex][1] === "extra closing tag" ? (
+              {lineHasError(processedHTML[selectedLineIndex]) ? (
                 <div className="error-row">
                   <img className="menu-icon" src={redErrorIcon} />
                   <div className="menu-text">{`Error ${processedHTML[selectedLineIndex][1]}`}</div>
                 </div>
               ) : null}
+
+              <p className="menu-codeline">
+                Line {selectedLineIndex + 1}:{" "}
+                {processedHTML[selectedLineIndex][0]}
+              </p>
 
               <div className="menu-row" onClick={handleEditLine}>
                 <img className="menu-icon" src={editIcon} />
@@ -232,7 +282,12 @@ const CodeViewer = ({ ocrOutput, setShowTabs, setTopNavbarTitle }) => {
               </div>
               <div className="menu-grey-line"></div>
               <div className="menu-row" onClick={handleAddLine}>
-                <img className="menu-icon" src={editIcon} />
+                <img className="menu-icon" src={greyPlus} />
+                <div className="menu-text">Add Line Before</div>
+              </div>
+              <div className="menu-grey-line"></div>
+              <div className="menu-row" onClick={handleAddLine}>
+                <img className="menu-icon" src={greyPlus} />
                 <div className="menu-text">Add Line After</div>
               </div>
               <div className="menu-grey-line"></div>
@@ -247,17 +302,5 @@ const CodeViewer = ({ ocrOutput, setShowTabs, setTopNavbarTitle }) => {
     </div>
   );
 };
-
-// Example HTML code lines (modify as needed)
-const codeLines = [
-  "<div>",
-  "  <h1>Hello, World!</h1>",
-  "  <p>This is a sample HTML code.</p>",
-  "  <ul>",
-  "    <li>Item 1</li>",
-  "    <li>Item 2</li>",
-  "  </ul>",
-  "</div>",
-];
 
 export default CodeViewer;

@@ -5,10 +5,11 @@ import CodeTabContent from "../../components/CodeTabContent/CodeTabContent";
 import { useLocation } from "react-router-dom";
 import CodeViewer from "../../components/CodeViewer/CodeViewer";
 import TopNavbar from "../../components/TopNavbar/TopNavbar";
+import WebsiteView from "../../components/WebsiteView/WebsiteView";
 
 const MainDashboard = () => {
   const [activeTab, setActiveTab] = useState("code");
-  const [htmlCode, setHtmlCode] = useState(false);
+  const [HTMLCode, setHTMLCode] = useState(false);
   const [showTabs, setShowTabs] = useState(true);
   const [topNavbarTitle, setTopNavbarTitle] = useState(
     "Exercise 1: Heading Tag"
@@ -22,6 +23,14 @@ const MainDashboard = () => {
     "<h2> I closed this </ha>",
     "</htmle",
   ];
+  // ocrOutput = [
+  //   // "<html>",
+  //   "<p> this is a paragraph </p>",
+  //   "<h3>",
+  //   "I didnt close",
+  //   "<h2> I closed this </h2>",
+  //   // "</html>",
+  // ];
   const { state } = useLocation();
   console.log(state);
   if (state?.ocrOutput) {
@@ -42,15 +51,12 @@ const MainDashboard = () => {
               ocrOutput={ocrOutput}
               setShowTabs={setShowTabs}
               setTopNavbarTitle={setTopNavbarTitle}
+              setHTMLCode={setHTMLCode}
             />
           );
         }
       case "website":
-        if (htmlCode !== false) {
-          return <div>Website Page</div>;
-        } else {
-          return <div>Fix all errors in the code tab!</div>;
-        }
+        return <WebsiteView HTMLCode={HTMLCode} />;
       default:
         return null;
     }

@@ -1,4 +1,3 @@
-/* CodeViewer.css */
 .code-viewer {
     font-family: monospace;
     font-size: 1rem;
@@ -28,15 +27,17 @@
     background-color: #ffffff;
   }
   
-  .error {
+  .red-colour-row {
     background-color: #ffcccc;
+  }
+
+  .blue-colour-row {
+    background-color: #b5b7f2;
   }
   
   .clicked {
     
   }
-
-  /* Add these styles to your CSS file */
 
 .overlay {
   position: fixed;
@@ -52,9 +53,8 @@
 
 .popup {
   background-color: #fff;
-  width: 90%;
+  width: 95%;
   box-sizing: border-box;
-  /* max-width: 400px; Adjust the maximum width as needed */
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -63,13 +63,20 @@
 
 .popup-header {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
 }
+
+.popup-header h3{
+  margin: 0.5rem 0rem;
+}
+
 
 .close-btn {
   cursor: pointer;
-  font-size: 24px;
-  color: #333;
+  font-size: 2rem;
+  color: #717171;
+  /* margin-right: 5rem; */
 }
 
 .popup-body {
@@ -78,38 +85,35 @@
 
 input {
   box-sizing: border-box;
-  width: 90%;
-  padding: 8px;
-  margin-bottom: 10px;
+  width: 100%;
+  padding: 16px 8px;
+  margin-bottom: 1rem;
   border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 14px;
-}
-
-.valid {
-  border-color: #4caf50; /* Green border for a valid input */
-}
-
-.check-mark {
-  color: #4caf50; /* Green color for the check mark */
-  margin-left: 5px;
+  border-radius: 10px;
+  font-size: 18px;
 }
 
 .submit-btn {
   background-color: #444AD4;;
   color: #fff;
-  padding: 10px;
+  padding: 1rem 0;
+  font-size: 1rem;
   border: none;
-  border-radius: 4px;
+  border-radius: 10px;
   cursor: pointer;
+  width: 100%;
+  margin-bottom: 1rem;
 }
 
 .submit-btn-border {
   color: #444AD4;
-  padding: 10px;
-  border: 2px solid #444AD4;
-  border-radius: 4px;
+  background-color: white;
+  font-size: 1rem;
+  padding: 1rem 0;
+  border: 0.1rem solid #444AD4;
+  border-radius: 10px;
   cursor: pointer;
+  width: 100%;
 }
 
 .menu-overlay {
@@ -126,13 +130,14 @@ input {
 
 .menu-codeline {
   font-size: 1.25rem;
+  margin-bottom: 1rem;
 }
 
 .menu-popup {
   width: 100%;
   background: #fff;
   padding: 1rem;
-  border-radius: 8px 8px 0 0; /* Rounded corners only at the top */
+  border-radius: 10px 10px 0 0; /* Rounded corners only at the top */
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
@@ -144,6 +149,7 @@ input {
   cursor: pointer;
   font-size: 2rem;
   color: #888;
+  margin-right: 0.5rem;
 }
 
 .menu-popup-body {
@@ -185,7 +191,6 @@ input {
   align-items: center;
   cursor: pointer;
   font-family: 'Inter', sans-serif;
-  padding-bottom: 2rem;
   font-size: 1.25rem;
 }
 

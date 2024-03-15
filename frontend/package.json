@@ -7,11 +7,15 @@
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "dompurify": "^3.0.9",
+    "html-react-parser": "^5.1.8",
+    "htmlparser2": "^9.1.0",
+    "levenshtein-edit-distance": "^3.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-html5-camera-photo": "^1.5.11",
     "react-router-dom": "^6.21.3",
-    "react-scripts": "^3.0.1",
+    "react-scripts": "^5.0.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -37,5 +41,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "react-error-overlay": "^6.0.9"
   }
 }

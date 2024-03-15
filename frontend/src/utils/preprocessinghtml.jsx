@@ -1,3 +1,6 @@
+import { Parser } from "htmlparser2";
+import { levenshteinEditDistance } from "levenshtein-edit-distance";
+
 export const stringToHTML = (text) => {
   console.log(text);
   text = text.replace(/ +/g, " "); // Convert multiple spaces to single space
@@ -67,7 +70,29 @@ export const stringToHTML = (text) => {
       if (isValidTag(current)) {
         codeLines.push([current.toLowerCase(), "valid tag"]);
       } else {
-        codeLines.push([current.toLowerCase(), "invalid tag"]);
+        let currentTagName = getTagName(current.toLowerCase());
+        let closestValidTag = replaceInvalidTag(
+          currentTagName,
+          getAllValidTags(),
+          1
+        );
+        if (closestValidTag == currentTagName) {
+          codeLines.push([current, "invalid tag"]);
+        } else {
+          if (current[0] == "<" && current[1] == "/") {
+            codeLines.push([
+              "</" + closestValidTag.toLowerCase() + ">",
+              "valid tag",
+            ]);
+          } else if (current[0] == "<") {
+            codeLines.push([
+              "<" + closestValidTag.toLowerCase() + ">",
+              "valid tag",
+            ]);
+          } else {
+            codeLines.push([current, "invalid tag"]);
+          }
+        }
       }
       current = "";
       i++;
@@ -78,6 +103,36 @@ export const stringToHTML = (text) => {
   return codeLines;
 };
 
+function replaceInvalidTag(invalidTag, validTags, threshold = 1) {
+  let minDistance = Infinity;
+  let closestValidTags = [invalidTag];
+
+  for (let validTag of validTags) {
+    const distance = levenshteinEditDistance(invalidTag, validTag);
+    if (distance < minDistance) {
+      minDistance = distance;
+      closestValidTags = [validTag];
+    } else if (distance == minDistance) {
+      closestValidTags.push(validTag);
+    }
+  }
+
+  if (minDistance <= threshold) {
+    if (closestValidTags.length > 1) {
+      console.log("Multiple valid tags found, not changing.");
+      return invalidTag;
+    } else {
+      console.log(
+        `Replacing "${invalidTag}" with "${closestValidTags[0]}" (Edit distance: ${minDistance})`
+      );
+      return closestValidTags[0];
+    }
+  } else {
+    console.log(`No close match found for "${invalidTag}"`);
+    return invalidTag;
+  }
+}
+
 const getTagName = (tag) => {
   try {
     return tag.match(/<\s*\/?\s*([a-zA-Z0-9_\-!"]+)\s*>/)[1].toLowerCase();
@@ -86,13 +141,23 @@ const getTagName = (tag) => {
   }
 };
 
+const getAllValidTags = () => {
+  return ["html", "p", "h1", "h2", "h3", "head", "body", "title"];
+};
+
 export const isValidTag = (tag) => {
   const tagName = getTagName(tag);
-  const validTags = ["html", "p", "h1", "h2", "h3", "head", "body", "title"];
+  const validTags = getAllValidTags();
   return validTags.includes(tagName.toLowerCase());
 };
 
-export const validateClosingTags = (HTMLCode) => {
+// Need to add a condition to wrap in html tags only and only consider that portion of code
+// need to check for doctype declaration -> maybe can use the parser selectively
+// use side by side? compare and see if its same move on if not fill in the gaps like
+// tags which dont have opening tags cause this can help in self closing tags and all
+// parser can help in comments, doctype declaration, self closing tags
+
+export const validateHTML = (HTMLCode) => {
   const openTags = [];
   const result = [];
 
@@ -162,4 +227,47 @@ export const validateClosingTags = (HTMLCode) => {
   }
 
   return result;
+};
+
+export const htmlParser = (HTMLString) => {
+  console.log("HTML PARSER");
+  HTMLString = "<p>hellpo";
+  const parser = new Parser({
+    onerror(error) {
+      console.log(error);
+    },
+    onopentag(name, attributes) {
+      /*
+       * This fires when a new tag is opened.
+       *
+       * If you don't need an aggregated `attributes` object,
+       * have a look at the `onopentagname` and `onattribute` events.
+       */
+      console.log("open tag", name, attributes);
+    },
+    ontext(text) {
+      /*
+       * Fires whenever a section of text was processed.
+       *
+       * Note that this can fire at any point within text and you might
+       * have to stitch together multiple pieces.
+       */
+      console.log("text", text);
+    },
+    onclosetag(tagname) {
+      /*
+       * Fires when a tag is closed.
+       *
+       * You can rely on this event only firing when you have received an
+       * equivalent opening tag before. Closing tags without corresponding
+       * opening tags will be ignored.
+       */
+      console.log("close tag", tagname);
+    },
+    onend() {
+      console.log("end");
+    },
+  });
+  parser.write(HTMLString);
+  parser.end();
 };
