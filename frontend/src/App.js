@@ -7,12 +7,16 @@ import CodeViewer from "./components/CodeViewer/CodeViewer";
 import MainDashboard from "./pages/MainDashboard/MainDashboard";
 import SplashPage from "./pages/SplashPage/SplashPage";
 import './styles/global.css';
+import LogInPage from "./pages/LogInPage/LogInPage";
+import SignUpPage from "./pages/SignUpPage/SignUpPage";
 
 function App() {
   return (
     <div className="App">
       <Routes>
         <Route path="/" element={<SplashPage/>}/>
+        <Route path="/login" element={<LogInPage/>}/>
+        <Route path="/signup" element={<SignUpPage/>}/>
         <Route path="/dashboard" element={<MainDashboard />} />
         <Route path="/confirmImage" element={<ConfirmImage />} />
         <Route path="/codeViewer" element={<CodeViewer />} />
