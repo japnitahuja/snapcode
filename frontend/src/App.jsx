@@ -9,9 +9,19 @@ import SplashPage from "./pages/SplashPage/SplashPage";
 import './styles/global.css';
 import LogInPage from "./pages/LogInPage/LogInPage";
 import SignUpPage from "./pages/SignUpPage/SignUpPage";
+import { useAuthContext } from "./contexts/authContext";
 
 
 function App() {
+  const {
+    isLoggedIn,
+    isAuthContextLoading,
+  } = useAuthContext();
+
+  if(isAuthContextLoading){
+    return <div>Loading...</div>
+  }
+
   return (
     <div className="App">
       <Routes>
