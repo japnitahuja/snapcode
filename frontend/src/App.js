@@ -10,6 +10,7 @@ import './styles/global.css';
 import LogInPage from "./pages/LogInPage/LogInPage";
 import SignUpPage from "./pages/SignUpPage/SignUpPage";
 
+
 function App() {
   return (
     <div className="App">

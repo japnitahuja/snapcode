@@ -3,6 +3,7 @@ import './SignUpForm.css';
 import LongButton from "../LongButton/LongButton";
 import { Link } from 'react-router-dom';
 import redErrorIcon from "../../assets/red-error.png";
+import {auth, createUserWithEmailAndPassword} from "../../config/firebase";
 
 function SignUpForm() {
   const [email, setEmail] = useState('');
@@ -12,14 +13,34 @@ function SignUpForm() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (password !== confirmPassword) {
+    if (password.length < 6) {
+      setError('Password should be atleast 6 characters.')
+      return;
+    }
+    else if (password !== confirmPassword) {
       setError('Passwords do not match');
       return;
     }
     setError('');
-    // Handle the sign-up logic here, e.g., creating the user
     console.log('Signing up with', email, password);
-    // Redirect or show success message
+    
+    createUserWithEmailAndPassword(auth, email, password).then(cred => {
+      setError('');
+      console.log(cred.user);
+    }).catch(error => {
+      if (error.code === "auth/email-already-in-use"){
+        setError("This email already has an account. Try Logging In.")
+        return;
+      } else if (error.code === "auth/invalid-email"){
+        setError("Enter valid email.")
+        return;
+      }else {
+        setError("An error occured")
+        console.log(error.code);
+        return;
+      }
+    });
+    
   };
 
   return (
@@ -53,13 +74,13 @@ function SignUpForm() {
           <input
             type="password"
             placeholder="Confirm Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
             required
           />
         </div>
         
-        <LongButton text="Sign Up"/>
+        <LongButton text="Sign Up" onClick={handleSubmit}/>
         <p>
           Have an account? <Link to="/login" className="link">Log In</Link>
         </p>

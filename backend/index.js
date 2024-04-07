@@ -1,3 +1,4 @@
+
 const express = require("express");
 const app = express();
 const port = 8080;
@@ -5,6 +6,9 @@ const fs = require("fs").promises;
 const aws = require("aws-sdk");
 const multer = require("multer");
 const cors = require("cors");
+const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
+
 
 require("dotenv").config();
 
@@ -13,6 +17,12 @@ app.use(
     credentials: true,
   })
 );
+
+app.use(express.json());
+app.use(bodyParser.json());
+app.use(bodyParser.text());
+app.use(cookieParser());
+app.use(express.urlencoded({extended:true}));
 
 // aws.config.update({
 //   region: process?.env.AWS_REGION,
@@ -108,6 +118,46 @@ app.post("/outputocr", upload.single("image"), async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+
+// var admin = require("firebase-admin");
+
+// var serviceAccount = require("./serviceAccountKey.json");
+
+// admin.initializeApp({
+//   credential: admin.credential.cert(serviceAccount)
+// });
+
+// const db = admin.firestore();
+// const firebase_auth = admin.auth();
+const admin = require("./config/firebaseConfig")
+console.log("main",admin)
+const firebase_auth = require("./config/firebaseConfig");
+
+// Create a new user
+app.post('/verify', async (req, res) => {
+
+    const { idToken } = req.body;
+    admin.auth()
+  .verifyIdToken(idToken)
+  .then((decodedToken) => {
+    const uid = decodedToken.uid;
+    res.json(uid);
+    // ...
+  })
+  .catch((error) => {
+    // Handle error
+    res.json(error);
+  });
+});
+
+app.post('/hello', async (req, res) => {
+
+res.json("hello")
+});
+
+const authRoutes = require("./routes/auth");
+app.use("/api/auth", authRoutes);
+
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);

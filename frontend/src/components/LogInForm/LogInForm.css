@@ -54,5 +54,17 @@
     color: #4C4BFF;
     cursor: pointer;
   }
+
+  .error-message {
+    margin-left:0.25rem;
+    font-size: 1rem;
+  }
+
+  .error-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  
   
   

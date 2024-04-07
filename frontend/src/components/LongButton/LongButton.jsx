@@ -4,7 +4,7 @@ import "./LongButton.css";
 
 const LongButton = ({ text, onClick, isOutline}) => {
   return (
-    <button className={isOutline == true? "outline": "solid"}>{text}</button>
+    <button className={isOutline == true? "outline": "solid"} onClick={onClick}>{text}</button>
   );
 };
 
