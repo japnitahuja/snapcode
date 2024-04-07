@@ -1,0 +1,32 @@
+.lower-nav {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  background-color: #fff;
+  border-top: 1px solid var(--primary-color);
+}
+
+.nav-item {
+  padding: 10px 20px;
+  flex: 1;
+  text-align: center;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.selected {
+  color:var(--primary-color);
+  font-weight: 800;
+}
+
+.nav-item-icon {
+  margin-bottom: 0.25rem;
+}

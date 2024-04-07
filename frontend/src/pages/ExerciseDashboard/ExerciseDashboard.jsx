@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./MainDashboard.css"; // Create a CSS file for styling
+import "./ExerciseDashboard.css"; // Create a CSS file for styling
 import Tabs from "../../components/Tabs/Tabs";
 import CodeTabContent from "../../components/CodeTabContent/CodeTabContent";
 import { useLocation } from "react-router-dom";
@@ -7,7 +7,7 @@ import CodeViewer from "../../components/CodeViewer/CodeViewer";
 import TopNavbar from "../../components/TopNavbar/TopNavbar";
 import WebsiteView from "../../components/WebsiteView/WebsiteView";
 
-const MainDashboard = () => {
+const ExerciseDashboard = () => {
   const [activeTab, setActiveTab] = useState("code");
   const [HTMLCode, setHTMLCode] = useState(false);
   const [showTabs, setShowTabs] = useState(true);
@@ -77,4 +77,4 @@ const MainDashboard = () => {
   );
 };
 
-export default MainDashboard;
+export default ExerciseDashboard;

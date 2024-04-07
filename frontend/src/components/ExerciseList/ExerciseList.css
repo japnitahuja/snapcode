@@ -1,0 +1,20 @@
+.exercises-list {
+  padding: 1rem;
+  overflow-y: scroll;
+}
+
+.exercise-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding: 1rem 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-bottom: 1px solid var(--light-grey);
+}
+
+.status-icon {
+  /* Adjust styles as needed */
+  margin-left: 10px;
+}
