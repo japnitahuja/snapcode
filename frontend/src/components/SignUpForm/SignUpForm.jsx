@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
 import './SignUpForm.css'; 
 import LongButton from "../LongButton/LongButton";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import redErrorIcon from "../../assets/red-error.png";
 import {auth, createUserWithEmailAndPassword} from "../../config/firebase";
+import { useAuthContext } from '../../contexts/authContext';
 
 function SignUpForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
+  const {setTriggerUpdateAuthContext} = useAuthContext();
+  const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -24,9 +27,24 @@ function SignUpForm() {
     setError('');
     console.log('Signing up with', email, password);
     
-    createUserWithEmailAndPassword(auth, email, password).then(cred => {
+    createUserWithEmailAndPassword(auth, email, password).then(async (cred)=> {
       setError('');
       console.log(cred.user);
+      try{
+        const response = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({uid:cred.user.uid}),
+        });
+        if (response.ok){
+          setTriggerUpdateAuthContext((prev)=>prev+1);
+          navigate("/dashboard");
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }).catch(error => {
       if (error.code === "auth/email-already-in-use"){
         setError("This email already has an account. Try Logging In.")

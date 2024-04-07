@@ -1,24 +1,42 @@
 import React, { useState } from 'react';
 import './LogInForm.css'; 
 import LongButton from "../LongButton/LongButton";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import redErrorIcon from "../../assets/red-error.png";
 import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { auth } from '../../config/firebase';
+import { useAuthContext } from '../../contexts/authContext';
 
 function LogInForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const {setTriggerUpdateAuthContext} = useAuthContext();
+  const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
     console.log('Logging in with', email, password);
 
-    signInWithEmailAndPassword(auth,email, password).then((cred) => {
+    signInWithEmailAndPassword(auth,email, password).then(async (cred) => {
       setError('');
       console.log(cred.user.getIdToken())
+      try{
+        const response = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({uid:cred.user.uid}),
+        });
+        if (response.ok){
+          setTriggerUpdateAuthContext((prev)=>prev+1);
+          navigate("/dashboard");
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }).catch(error => {
       console.log(error)
       setError("Invalid credentials.")
@@ -26,9 +44,22 @@ function LogInForm() {
     });
   };
 
-  const logout = (event) => {
+  const logout = async (event) => {
     event.preventDefault();
     signOut(auth);
+    try{
+      const response = await fetch("/api/auth/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (response.ok){
+        setTriggerUpdateAuthContext((prev)=>prev+1);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (

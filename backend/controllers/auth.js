@@ -49,7 +49,6 @@ const returnuser = async (req, res) => {
       sameSite: "none",
     });
     
-    
     res.status(200).json(user);
   };
 

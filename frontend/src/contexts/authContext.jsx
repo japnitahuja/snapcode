@@ -9,6 +9,7 @@ export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState("Anonymous");
   const [isAuthContextLoading, setIsAuthContextLoading] = useState(true);
+  const [triggerUpdateAuthContext, setTriggerUpdateAuthContext] = useState(1);
 
   const login = () => {
     setIsLoggedIn(true);
@@ -46,7 +47,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     updateAuthContext();
-  }, []);
+  }, [triggerUpdateAuthContext]);
 
   return (
     <AuthContext.Provider
@@ -57,6 +58,7 @@ export const AuthProvider = ({ children }) => {
         login,
         logout,
         updateAuthContext,
+        setTriggerUpdateAuthContext
       }}
     >
       {children}
