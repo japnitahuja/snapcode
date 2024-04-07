@@ -6,7 +6,7 @@ const TopNavbar = ({ title, leftimage, rightimage }) => {
   return (
     <div className="navbar">
       <div className="left-content">
-        {leftimage ? null : (
+        {leftimage == false ? null : (
           <img
             src={backarrow}
             alt="Back Arrow"
