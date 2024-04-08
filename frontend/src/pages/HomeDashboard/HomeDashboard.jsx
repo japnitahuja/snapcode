@@ -6,6 +6,7 @@ import { useLocation } from "react-router-dom";
 import TopNavbar from "../../components/TopNavbar/TopNavbar";
 import BottomNavbar from "../../components/BottomNavbar/BottomNavbar";
 import ExerciseList from "../../components/ExerciseList/ExerciseList";
+import Account from "../../components/Account/Account";
 
 const HomeDashboard = () => {
   const [bottomNavSelected,setBottomNavSelected] = useState("home");
@@ -17,7 +18,7 @@ const HomeDashboard = () => {
       case "code":
         return <div>code</div>
       case "account":
-        return <div>account</div>
+        return <Account/>
       default:
         return null;
   }

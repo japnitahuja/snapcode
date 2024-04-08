@@ -31,7 +31,7 @@ function App() {
         <Route path="/login" element={<LogInPage/>}/>
         <Route path="/signup" element={<SignUpPage/>}/>
         <Route path="/dashboard" element={<HomeDashboard/>}/>
-        <Route path="/exerciseDashboard" element={<ExerciseDashboard />} />
+        <Route path="/exerciseDashboard/:exId" element={<ExerciseDashboard />} />
         <Route path="/confirmImage" element={<ConfirmImage />} />
         <Route path="/codeViewer" element={<CodeViewer />} />
       </Routes>

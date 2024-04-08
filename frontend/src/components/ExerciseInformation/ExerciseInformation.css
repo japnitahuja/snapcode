@@ -1,0 +1,28 @@
+.exercise-container {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+
+.description, .expected-output, .get-started {
+  margin-bottom: 3rem;
+}
+
+.exercise-heading {
+  font-size: 1.5em;
+  text-decoration: underline;
+  text-decoration-skip-ink: auto; 
+  text-underline-offset: 0.4em;
+  text-decoration-color: var(--primary-color);
+}
+
+p {
+  font-size: 1em;
+  color: #333;
+}
+
+
+.expected-output-div {
+  margin-top: 3rem;
+}
+
+

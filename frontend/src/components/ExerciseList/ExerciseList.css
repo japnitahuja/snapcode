@@ -12,6 +12,8 @@
   font-size: 1.1rem;
   font-weight: 600;
   border-bottom: 1px solid var(--light-grey);
+  cursor: pointer;
+  text-decoration: none;
 }
 
 .status-icon {

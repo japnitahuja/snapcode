@@ -17,10 +17,10 @@ const Tabs = ({ activeTab, onTabChange }) => {
         Code
       </div>
       <div
-        className={`tab ${activeTab === "website" ? "active" : ""}`}
-        onClick={() => onTabChange("website")}
+        className={`tab ${activeTab === "output" ? "active" : ""}`}
+        onClick={() => onTabChange("output")}
       >
-        Website
+        Output
       </div>
     </div>
   );

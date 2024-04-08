@@ -3,7 +3,7 @@ import './LogInForm.css';
 import LongButton from "../LongButton/LongButton";
 import { Link, useNavigate } from 'react-router-dom';
 import redErrorIcon from "../../assets/red-error.png";
-import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../config/firebase';
 import { useAuthContext } from '../../contexts/authContext';
 
@@ -11,7 +11,7 @@ function LogInForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const {setTriggerUpdateAuthContext} = useAuthContext();
+  const {setTriggerUpdateAuthContext, setUser} = useAuthContext();
   const navigate = useNavigate();
 
   const handleSubmit = (event) => {
@@ -32,6 +32,7 @@ function LogInForm() {
         });
         if (response.ok){
           setTriggerUpdateAuthContext((prev)=>prev+1);
+          setUser(cred.user);
           navigate("/dashboard");
         }
       } catch (error) {
@@ -43,24 +44,6 @@ function LogInForm() {
       return;
     });
   };
-
-  const logout = async (event) => {
-    event.preventDefault();
-    signOut(auth);
-    try{
-      const response = await fetch("/api/auth/logout", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      if (response.ok){
-        setTriggerUpdateAuthContext((prev)=>prev+1);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
 
   return (
     <div className="container">
@@ -90,7 +73,6 @@ function LogInForm() {
           />
         </div>
         <LongButton text="Log In"/>
-        <button onClick={logout}>Log Out</button>
         <p>
           Don’t have an account? <Link to="/signup" className="link">Sign Up</Link>
         </p>

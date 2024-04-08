@@ -2,7 +2,7 @@ import React from "react";
 import "./TopNavbar.css"; // Create a CSS file for styling
 import backarrow from "../../assets/backarrow.png";
 
-const TopNavbar = ({ title, leftimage, rightimage }) => {
+const TopNavbar = ({ title, leftimage, rightimage, leftOnClick }) => {
   return (
     <div className="navbar">
       <div className="left-content">
@@ -12,6 +12,7 @@ const TopNavbar = ({ title, leftimage, rightimage }) => {
             alt="Back Arrow"
             className="arrow"
             style={{ height: "20px", width: "11px" }}
+            onClick = {leftOnClick}
           />
         )}
       </div>

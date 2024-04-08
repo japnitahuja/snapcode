@@ -55,6 +55,7 @@ export const AuthProvider = ({ children }) => {
         isLoggedIn,
         user,
         isAuthContextLoading,
+        setUser,
         login,
         logout,
         updateAuthContext,
