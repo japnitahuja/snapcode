@@ -142,7 +142,7 @@ const getTagName = (tag) => {
 };
 
 const getAllValidTags = () => {
-  return ["html", "p", "h1", "h2", "h3", "head", "body", "title"];
+  return ["html", "p", "h1", "h2", "h3", "head", "body", "title","h4","h5","h6","b"];
 };
 
 export const isValidTag = (tag) => {

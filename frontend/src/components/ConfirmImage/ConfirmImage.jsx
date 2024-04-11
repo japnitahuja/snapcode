@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import "./ComfirmImage.css"; // Import your stylesheet for additional styling
 import { useLocation, useNavigate } from "react-router-dom";
+import { useAuthContext } from "../../contexts/authContext";
 
 const ComfirmImage = () => {
   const { state } = useLocation();
   const { imageData, imageBuffer, file } = state;
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const {currentExercise} = useAuthContext();
   console.log(imageBuffer);
   console.log(imageData);
   console.log(file);
@@ -29,7 +31,7 @@ const ComfirmImage = () => {
         const jsonData = await response.json();
         console.log("OCR Output:", jsonData);
         // jsonData.map((each) => console.log(each));
-        navigate("/", { state: { ocrOutput: jsonData } });
+        navigate(`/exerciseDashboard/${currentExercise}`, { state: { ocrOutput: jsonData } });
       }
     } catch (error) {
       console.error("Fetch error:", error);

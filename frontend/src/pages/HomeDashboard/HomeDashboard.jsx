@@ -26,7 +26,7 @@ const HomeDashboard = () => {
 
   return (
     <div>
-      <TopNavbar title={bottomNavSelected == "home" ? "Dashboard":"Account"}/>
+      <TopNavbar title={bottomNavSelected == "home" ? "Dashboard":"Account"} leftimage={false}/>
       <div className="content-container">{renderContent()}</div>
       <BottomNavbar handleChange={setBottomNavSelected}/>
     </div>

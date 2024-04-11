@@ -10,6 +10,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState("Anonymous");
   const [isAuthContextLoading, setIsAuthContextLoading] = useState(true);
   const [triggerUpdateAuthContext, setTriggerUpdateAuthContext] = useState(1);
+  const [currentExercise,setCurrentExercise] = useState(0);
 
   const login = () => {
     setIsLoggedIn(true);
@@ -55,11 +56,13 @@ export const AuthProvider = ({ children }) => {
         isLoggedIn,
         user,
         isAuthContextLoading,
+        currentExercise,
         setUser,
         login,
         logout,
         updateAuthContext,
-        setTriggerUpdateAuthContext
+        setTriggerUpdateAuthContext,
+        setCurrentExercise,
       }}
     >
       {children}

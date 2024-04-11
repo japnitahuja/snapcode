@@ -67,6 +67,21 @@ app.post("/outputocr", upload.single("image"), async (req, res) => {
     }
 
     // const textOutput = await processOCR(req.file.buffer);
+    const textOutput = [
+      '<html>',
+      '<head>',
+      '<title> Website </title>',
+      '</head>',
+      '<body>',
+      '<h1> Introduction </h1>',
+      '<p> Hi, my name is Gauri and I am',
+      '12 years old . I love cooking and',
+      'listening to music. My favourite subject',
+      'is english !',
+      '<p>',
+      '</body>',
+      '</html>'
+    ]
     // let textOutput = [
     //   "<!",
     //   "DOCTYPE html>",
@@ -96,13 +111,13 @@ app.post("/outputocr", upload.single("image"), async (req, res) => {
     //   "</BODY>",
     //   "</HTHL>",
     // ];
-    let textOutput = [
-      "<html>",
-      "<p> this is a paragraph </p>",
-      "<hl> I didn't close this tag",
-      "<h2> I closed this </ha>",
-      "</htmle",
-    ];
+    // let textOutput = [
+    //   "<html>",
+    //   "<p> this is a paragraph </p>",
+    //   "<hl> I didn't close this tag",
+    //   "<h2> I closed this </ha>",
+    //   "</htmle",
+    // ];
 
     // textOutput = [
     //   "<html>",

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./ExerciseDashboard.css"; // Create a CSS file for styling
 import Tabs from "../../components/Tabs/Tabs";
 import CodeTabContent from "../../components/CodeTabContent/CodeTabContent";
@@ -10,14 +10,15 @@ import { exercises } from "../../data/exercises";
 import ExerciseInformation from "../../components/ExerciseInformation/ExerciseInformation";
 
 const ExerciseDashboard = () => {
+  const { state } = useLocation();
   const {exId} = useParams();
-  const [activeTab, setActiveTab] = useState("exercise");
+  const [activeTab, setActiveTab] = useState("code");
   const [HTMLCode, setHTMLCode] = useState(false);
   const [showTabs, setShowTabs] = useState(true);
   const [topNavbarTitle, setTopNavbarTitle] = useState(
     exercises[exId].title
   );
-  const [ocrOutput,setOCROutput] = useState("");
+  const [ocrOutput,setOCROutput] = useState(state?.ocrOutput);
   const [topNavbarBackLink, setTopNavbarBackLink] = useState("");
   const navigate = useNavigate();
 
@@ -36,11 +37,14 @@ const ExerciseDashboard = () => {
   //   "<h2> I closed this </h2>",
   //   "</html>",
   // ];
-  const { state } = useLocation();
-  console.log(state);
-  if (state?.ocrOutput) {
-    ocrOutput = state.ocrOutput;
-  }
+  let ocrOutput2 = ['<html>', '<head>', '<title> Document </title>', '</head>', '<body>', '<hl> About me </hl>', '<h3> Introduction </h3>', '<p>My name is <b> Priya<lb> and I am', '14 years old. I live in Delhi. </p>', '<h2> My Likes and Dislikes </h2>', '<hu> Likes </h4>', '<p> I like reading comic books and watching', 'movies. </p>', "<p> I don't like cats and the colour", '<h4> My Dislikes </hu>', 'green. c/p>', '</body>', '</html>']
+  //ocrOutput2 = ['<html>', '<head>', '<title> MyWebsite </title>', '</head>', '<body>', '<hl>E </hl>', '<h2> FP</h2>', '<h3> TOZ </h3>', '<h4> LPED </h4>', '<h5> P EC F O / h5>', '<h6>EDFC Z P</hb>', '</body>', '</html>']
+  
+  // console.log(state);
+  // if (state?.ocrOutput) {
+  //   setOCROutput(state.ocrOutput);
+  // }
+
 
   console.log(ocrOutput);
   const renderContent = () => {
@@ -48,7 +52,7 @@ const ExerciseDashboard = () => {
       case "exercise":
         return <ExerciseInformation exId={exId}/>
       case "code":
-        if (!ocrOutput) {
+        if (!ocrOutput || ocrOutput == undefined || ocrOutput==null) {
           return <CodeTabContent />;
         } else {
           return (
