@@ -6,24 +6,35 @@ https://github.com/japnitahuja/snapcode/assets/10168783/88ba3d3f-b8ea-4ee6-ad90-
 
 ## Features
 **Image-to-Text Conversion**: Convert handwritten code images to text format using OCR technology.
+
 **Interactive Code Editing**: Edit and debug code directly on your mobile device.
+
 **Real Time Web View**: View the output of your code seamlessly.
+
 **Multi-Modal Interaction**: Seamlessly switch between paper and digital platforms for coding activities.
+
 **Exercises**: Follow a lesson plan to learn.
 
 ## Get Started:
 
 Clone the repository: `git clone https://github.com/japnitahuja/snapcode.git`
+
 Navigate to the project directory: `cd snapcode`
 
 For frontend:
+
 Navigate to frontend folder: `cd frontend`
+
 Install dependencies: `npm install`
+
 Start the development server: `npm start`
 
 For backend:
+
 Navigate to backend folder: `cd backend`
+
 Install dependencies: `npm install`
+
 Start the development server: `npm start`
 
 ## Contributing
