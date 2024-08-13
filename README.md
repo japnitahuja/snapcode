@@ -1,6 +1,6 @@
 # SnapCode
 
-SnapCode is a mobile application designed to enhance coding education accessibility, particularly for students in underserved communities. Leveraging mobile technology and innovative design, SnapCode allows students to capture handwritten code on paper and interact with it on their mobile devices, bridging the gap created by limited access to computers and resources.
+SnapCode is a mobile application designed to enhance coding education accessibility, particularly for students in underserved communities. Leveraging mobile technology and innovative design, SnapCode allows students to capture handwritten code on paper and interact with it on their mobile devices, bridging the gap created by limited access to computers and resources. The inspiration of this project was from my nonprofit initiative https://www.gogirlorganisation.com/ where we often face workshops with lack of computers.
 
 https://github.com/japnitahuja/snapcode/assets/10168783/88ba3d3f-b8ea-4ee6-ad90-76d05cfdd278
 
